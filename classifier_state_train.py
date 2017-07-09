@@ -31,6 +31,14 @@ def load_img(fn, width, height):
     return img
 
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(description='state classifier trainer')
+    parser.add_argument('epochs', nargs='?', type=int, help="epochs count")
+    parser.add_argument('--testonly', action='store_true', help="test only")
+    args = parser.parse_args()
+
+    assert((args.epochs!=None)or(args.testonly))
 
     label_state_path = os.path.join('label','state')
     label_name_list = os.listdir(label_state_path)
@@ -56,19 +64,15 @@ if __name__ == '__main__':
     #json.dump(sample_list, fp=sys.stdout, indent=2)
     
     test_count = int(len(sample_list)/10)
+
     train_sample_list = sample_list[test_count:-test_count]
     test_sample_list  = sample_list[:test_count]
     valid_sample_list = sample_list[-test_count:]
-    
-    train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_count)
+
     test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_count)
-    valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_count)
-    
-    #print(test_img_list.shape)
-    #print(test_label_onehot_list.shape)
-    
+
     model = Sequential()
-    model.add(Conv2D(filters=16, kernel_size=2, padding='valid', activation='elu', input_shape=train_img_list.shape[1:]))
+    model.add(Conv2D(filters=16, kernel_size=2, padding='valid', activation='elu', input_shape=test_img_list.shape[1:]))
     model.add(Conv2D(filters=16, kernel_size=1, padding='valid', activation='elu'))
     model.add(MaxPooling2D(pool_size=2))
     model.add(Conv2D(filters=32, kernel_size=2, padding='valid', activation='elu'))
@@ -85,10 +89,19 @@ if __name__ == '__main__':
     model.summary()
     
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+        
+    if not args.testonly:
+        train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_count)
+        valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_count)
+        
+        epochs = args.epochs
+        checkpointer = ModelCheckpoint(filepath='model/classifier_state.hdf5', verbose=1, save_best_only=True)
+        model.fit(train_img_list, train_label_onehot_list,
+            validation_data=(valid_img_list, valid_label_onehot_list),
+            epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
+
     
-    epochs = 999
-    checkpointer = ModelCheckpoint(filepath='model/classifier_state.hdf5', verbose=1, save_best_only=True)
-    model.fit(train_img_list, train_label_onehot_list,
-        validation_data=(valid_img_list, valid_label_onehot_list),
-        epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
-    
+    model.load_weights('model/classifier_state.hdf5')
+    test_predictions = [np.argmax(model.predict(np.expand_dims(img_list, axis=0))) for img_list in test_img_list]
+    test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
+    print('Test accuracy: %.4f' % test_accuracy)
