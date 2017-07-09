@@ -40,6 +40,7 @@ if __name__ == '__main__':
         if os.path.isfile(label_path):
             with open(label_path, mode='rt', encoding='utf-8') as fin:
                 path_list_ori = fin.readlines()
+            path_list_ori = [ i.strip() for i in path_list_ori ]
 
         path_list = path_list + path_list_ori
         path_list = list(set(path_list))
