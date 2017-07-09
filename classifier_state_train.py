@@ -24,7 +24,7 @@ def load_img_list(fn_list,width,height):
     return np.array(img_list)
 
 def load_img(fn, width, height):
-    img = cv2.imread(fn).astype('float32')/255
+    img = cv2.imread(fn).astype('float32')*2/255-1
     img = cv2.resize(img,dsize=(width,height),interpolation=cv2.INTER_AREA)
     return img
 

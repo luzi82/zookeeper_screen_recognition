@@ -34,7 +34,7 @@ if __name__ == '__main__':
     parser.add_argument('img_file', help="img_file")
     args = parser.parse_args()
     
-    img = cv2.imread(args.img_file).astype('float32')/255
+    img = cv2.imread(args.img_file).astype('float32')*2/255-1
 
     sc = StateClassifier(MODEL_PATH)
 
