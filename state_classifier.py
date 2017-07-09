@@ -24,8 +24,9 @@ class StateClassifier:
         #print(img.shape)
         img = cv2.resize(img,dsize=(classifier_state_model.WIDTH,classifier_state_model.HEIGHT),interpolation=cv2.INTER_AREA)
         p = self.model.predict(np.expand_dims(img, axis=0))
+        score = np.max(p)
         label_idx = np.argmax(p)
-        return self.data['label_name_list'][label_idx]
+        return self.data['label_name_list'][label_idx], score
 
 if __name__ == '__main__':
     import argparse
@@ -39,4 +40,5 @@ if __name__ == '__main__':
     sc = StateClassifier()
     sc.load_file()
 
-    print(sc.get_state(img))
+    label, score = sc.get_state(img)
+    print('{} {}'.format(label, score))
