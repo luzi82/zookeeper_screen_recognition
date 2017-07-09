@@ -21,10 +21,10 @@ def sample_list_to_data_set(sample_list, label_count):
 
 def load_img_list(fn_list,width,height):
     img_list = [ load_img(fn, width, height) for fn in fn_list ]
-    return np.array(img_list).astype('float32')/255
+    return np.array(img_list)
 
 def load_img(fn, width, height):
-    img = cv2.imread(fn)
+    img = cv2.imread(fn).astype('float32')/255
     img = cv2.resize(img,dsize=(width,height),interpolation=cv2.INTER_AREA)
     return img
 
