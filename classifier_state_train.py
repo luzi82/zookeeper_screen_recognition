@@ -9,6 +9,7 @@ from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMax
 from keras.layers import Dropout, Flatten, Dense
 from keras.models import Sequential
 from keras.callbacks import ModelCheckpoint
+import json
 
 WIDTH = 36
 HEIGHT = 64
@@ -91,6 +92,13 @@ if __name__ == '__main__':
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
         
     if not args.testonly:
+        j = {
+            'label_name_list': label_name_list
+        }
+        with open(os.path.join('model','data.json'),'w') as fout:
+            json.dump(j, fp=fout, indent=2)
+            fout.write('\n')
+
         train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_count)
         valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_count)
         
