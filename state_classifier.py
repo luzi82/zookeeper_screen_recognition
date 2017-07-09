@@ -16,9 +16,8 @@ class StateClassifier:
             self.data = json.load(fin)
         self.model = classifier_state_model.create_model(len(self.data['label_name_list']))
 
-    def load_file(self):
-        #self.model.load_weights(WEIGHT_PATH)
-        self.model.load_weights('model/classifier_state.hdf5')
+    def load_file(self, weight_path):
+        self.model.load_weights(weight_path)
 
     def get_state(self, img):
         #print(img.shape)
@@ -38,7 +37,7 @@ if __name__ == '__main__':
     img = cv2.imread(args.img_file).astype('float32')/255
 
     sc = StateClassifier()
-    sc.load_file()
+    sc.load_file(WEIGHT_PATH)
 
     label, score = sc.get_state(img)
     print('{} {}'.format(label, score))
