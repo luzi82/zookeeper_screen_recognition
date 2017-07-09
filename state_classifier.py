@@ -4,19 +4,19 @@ import cv2
 import numpy as np
 
 MODEL_PATH = 'model'
-WEIGHT_PATH = os.path.join(MODEL_PATH,'classifier_state.hdf5')
-DATA_PATH   = os.path.join(MODEL_PATH,'data.json')
+WEIGHT_FILENAME = 'classifier_state.hdf5'
+DATA_FILENAME   = 'data.json'
 
 import classifier_state_model
 
 class StateClassifier:
 
-    def __init__(self):
-        with open(DATA_PATH,'r') as fin:
+    def __init__(self, model_path):
+        weight_path = os.path.join(model_path, WEIGHT_FILENAME)
+        data_path   = os.path.join(model_path, DATA_FILENAME)
+        with open(data_path,'r') as fin:
             self.data = json.load(fin)
         self.model = classifier_state_model.create_model(len(self.data['label_name_list']))
-
-    def load_file(self, weight_path):
         self.model.load_weights(weight_path)
 
     def get_state(self, img):
@@ -36,8 +36,7 @@ if __name__ == '__main__':
     
     img = cv2.imread(args.img_file).astype('float32')/255
 
-    sc = StateClassifier()
-    sc.load_file(WEIGHT_PATH)
+    sc = StateClassifier(MODEL_PATH)
 
     label, score = sc.get_state(img)
     print('{} {}'.format(label, score))
