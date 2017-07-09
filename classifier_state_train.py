@@ -5,15 +5,12 @@ import random
 import cv2
 import numpy as np
 from keras.utils import np_utils
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D
-from keras.layers import Dropout, Flatten, Dense
-from keras.models import Sequential
 from keras.callbacks import ModelCheckpoint
 import json
+import classifier_state_model
 
-WIDTH = 36
-HEIGHT = 64
-PHI = (1+5**0.5)/2
+WIDTH  = classifier_state_model.WIDTH
+HEIGHT = classifier_state_model.HEIGHT
 
 def sample_list_to_data_set(sample_list, label_count):
     fn_list = [ sample['fn'] for sample in sample_list ]
@@ -70,23 +67,7 @@ if __name__ == '__main__':
     test_sample_list  = sample_list[:test_count]
     valid_sample_list = sample_list[-test_count:]
 
-    test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_count)
-
-    model = Sequential()
-    model.add(Conv2D(filters=16, kernel_size=2, padding='valid', activation='elu', input_shape=test_img_list.shape[1:]))
-    model.add(Conv2D(filters=16, kernel_size=1, padding='valid', activation='elu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(Conv2D(filters=32, kernel_size=2, padding='valid', activation='elu'))
-    model.add(Conv2D(filters=32, kernel_size=1, padding='valid', activation='elu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(Conv2D(filters=64, kernel_size=2, padding='valid', activation='elu'))
-    model.add(Conv2D(filters=64, kernel_size=1, padding='valid', activation='elu'))
-    model.add(MaxPooling2D(pool_size=2))
-    model.add(GlobalAveragePooling2D())
-    model.add(Dropout(2-PHI))
-    model.add(Dense(64, activation='elu'))
-    model.add(Dropout(2-PHI))
-    model.add(Dense(label_count, activation='softmax'))
+    model = classifier_state_model.create_model(label_count)
     model.summary()
     
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -110,6 +91,8 @@ if __name__ == '__main__':
 
     
     model.load_weights('model/classifier_state.hdf5')
+
+    test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_count)
     test_predictions = [np.argmax(model.predict(np.expand_dims(img_list, axis=0))) for img_list in test_img_list]
     test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
     print('Test accuracy: %.4f' % test_accuracy)
