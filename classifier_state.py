@@ -2,6 +2,7 @@ import os
 import json
 import cv2
 import numpy as np
+from functools import lru_cache
 
 MODEL_PATH = 'model'
 WEIGHT_FILENAME = 'classifier_state.hdf5'
@@ -9,11 +10,17 @@ DATA_FILENAME   = 'data.json'
 
 import classifier_state_model
 
-_ex_ch_np_slot = [None]
+WIDTH  = classifier_state_model.WIDTH
+HEIGHT = classifier_state_model.HEIGHT
 
 def load_img(fn):
     img = cv2.imread(fn).astype('float32')*2/255-1
-    h,w,_ = img.shape
+    return img
+
+@lru_cache(maxsize=4)
+def xy_layer():
+    w = WIDTH
+    h = HEIGHT
     xx = np.array(list(range(w))).astype('float32')*2/(w-1)-1
     xx = np.tile(xx,h)
     xx = np.reshape(xx,(h,w,1))
@@ -21,8 +28,10 @@ def load_img(fn):
     yy = np.repeat(yy,w)
     yy = np.reshape(yy,(h,w,1))
     xxyy = np.append(xx,yy,axis=2)
-    img = np.append(img,xxyy,axis=2)
-    return img
+    return xxyy
+
+def append_xy_layer(img):
+    return np.append(img,xy_layer(),axis=2)
 
 class StateClassifier:
 
@@ -37,6 +46,7 @@ class StateClassifier:
     def get_state(self, img):
         #print(img.shape)
         img = cv2.resize(img,dsize=(classifier_state_model.WIDTH,classifier_state_model.HEIGHT),interpolation=cv2.INTER_AREA)
+        img = append_xy_layer(img)
         p = self.model.predict(np.expand_dims(img, axis=0))
         score = np.max(p)
         label_idx = np.argmax(p)
@@ -50,9 +60,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     
     img = load_img(args.img_file)
-    print(img.shape)
 
-#    sc = StateClassifier(MODEL_PATH)
-#
-#    label, score = sc.get_state(img)
-#    print('{} {}'.format(label, score))
+    sc = StateClassifier(MODEL_PATH)
+
+    label, score = sc.get_state(img)
+    print('{} {}'.format(label, score))

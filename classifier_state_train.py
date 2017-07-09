@@ -27,6 +27,7 @@ def load_img_list(fn_list,width,height):
 def load_img(fn, width, height):
     img = classifier_state.load_img(fn)
     img = cv2.resize(img,dsize=(width,height),interpolation=cv2.INTER_AREA)
+    img = classifier_state.append_xy_layer(img)
     return img
 
 if __name__ == '__main__':
