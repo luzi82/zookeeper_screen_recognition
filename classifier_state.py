@@ -9,6 +9,21 @@ DATA_FILENAME   = 'data.json'
 
 import classifier_state_model
 
+_ex_ch_np_slot = [None]
+
+def load_img(fn):
+    img = cv2.imread(fn).astype('float32')*2/255-1
+    h,w,_ = img.shape
+    xx = np.array(list(range(w))).astype('float32')*2/(w-1)-1
+    xx = np.tile(xx,h)
+    xx = np.reshape(xx,(h,w,1))
+    yy = np.array(list(range(h))).astype('float32')*2/(h-1)-1
+    yy = np.repeat(yy,w)
+    yy = np.reshape(yy,(h,w,1))
+    xxyy = np.append(xx,yy,axis=2)
+    img = np.append(img,xxyy,axis=2)
+    return img
+
 class StateClassifier:
 
     def __init__(self, model_path):
@@ -34,9 +49,10 @@ if __name__ == '__main__':
     parser.add_argument('img_file', help="img_file")
     args = parser.parse_args()
     
-    img = cv2.imread(args.img_file).astype('float32')*2/255-1
+    img = load_img(args.img_file)
+    print(img.shape)
 
-    sc = StateClassifier(MODEL_PATH)
-
-    label, score = sc.get_state(img)
-    print('{} {}'.format(label, score))
+#    sc = StateClassifier(MODEL_PATH)
+#
+#    label, score = sc.get_state(img)
+#    print('{} {}'.format(label, score))

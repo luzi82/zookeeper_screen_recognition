@@ -10,7 +10,7 @@ PHI = (1+5**0.5)/2
 def create_model(label_count):
     model = Sequential()
     model.add(Conv2D(
-        filters=16, kernel_size=2, padding='valid', activation='elu', input_shape=(HEIGHT,WIDTH,3),
+        filters=16, kernel_size=2, padding='valid', activation='elu', input_shape=(HEIGHT,WIDTH,5),
         kernel_regularizer = regularizers.l2(0.01),
         bias_regularizer = regularizers.l2(0.01)
     ))

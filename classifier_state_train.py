@@ -8,6 +8,7 @@ from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 import json
 import classifier_state_model
+import classifier_state
 
 WIDTH  = classifier_state_model.WIDTH
 HEIGHT = classifier_state_model.HEIGHT
@@ -24,7 +25,7 @@ def load_img_list(fn_list,width,height):
     return np.array(img_list)
 
 def load_img(fn, width, height):
-    img = cv2.imread(fn).astype('float32')*2/255-1
+    img = classifier_state.load_img(fn)
     img = cv2.resize(img,dsize=(width,height),interpolation=cv2.INTER_AREA)
     return img
 
