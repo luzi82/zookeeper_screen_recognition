@@ -22,7 +22,10 @@
     "title",
     "vs_boss_dialog",
     "zoo",
+    "zoo_boss_go_for_it",
     "zoo_cell",
-    "zoo_cell_cell"
+    "zoo_cell_cell",
+    "zoo_events",
+    "zoo_raid_battle_history"
   ]
 }
