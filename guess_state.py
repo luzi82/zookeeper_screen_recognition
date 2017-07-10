@@ -24,17 +24,16 @@ if __name__ == '__main__':
     else:
         raw_image_timestamp_list = os.listdir('raw_image')
         raw_image_timestamp_list = filter(lambda v:os.path.isdir(os.path.join('raw_image',v)),raw_image_timestamp_list)
-        raw_image_timestamp_list = [ int(i) for i in raw_image_timestamp_list ]
         timestamp_list = raw_image_timestamp_list
 
     img_fn_filter_set = set()
     if args.unknown_only:
-        label_state_list = _util.label_state_list()
+        label_state_list = _util.get_label_state_list()
         for label_state in label_state_list:
             with open(os.path.join('label','state','{}.txt'.format(label_state))) as fin:
                 img_fn_list = fin.readlines()
             img_fn_list = [ img_fn.strip() for img_fn in img_fn_list ]
-            img_fn_filter_set += img_fn_list
+            img_fn_filter_set = img_fn_filter_set | set(img_fn_list)
 
     for timestamp in timestamp_list:
         raw_image_ts_path = os.path.join('raw_image',timestamp)
