@@ -22,8 +22,8 @@ if __name__ == '__main__':
     def get_timestamp(v):
         return max(filter(lambda i:i<v,raw_image_timestamp_list))
     
-    for label_name in os.listdir('check'):
-        label_path = os.path.join('check',label_name)
+    for label_name in os.listdir('input'):
+        label_path = os.path.join('input',label_name)
         path_list = []
         if not os.path.isdir(label_path):
             continue
