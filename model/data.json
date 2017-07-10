@@ -1,33 +1,25 @@
 {
   "label_name_list": [
-    "all_items_received_dialog",
     "battle",
     "battle_result",
     "blank",
     "check_out_all_the_events_dialog",
     "circle_fade",
-    "congratulations_dialog",
     "connecting_server_dialog",
     "gift_box",
-    "information_dialog",
-    "item_award_dialog",
     "kiteretsu",
     "level_up",
     "limited_time_sale_dialog",
     "main_menu",
     "no_cp_dialog",
     "not_zookeeper",
+    "ok_dialog",
     "power_bottle_rematch_dialog",
     "searching_player",
-    "the_boss_pick_dialog",
     "title",
     "vs_boss_dialog",
-    "welcome_visitors_dialog",
     "zoo",
     "zoo_cell",
-    "zoo_cell_cell",
-    "zoo_exhibits_dialog",
-    "zoo_level_up_dialog",
-    "zoo_new_supporter_human_dialog"
+    "zoo_cell_cell"
   ]
 }
