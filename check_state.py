@@ -10,7 +10,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.state != None:
-        state_list = [state]
+        state_list = [args.state]
     else:
         state_list = _util.get_label_state_list()
 
