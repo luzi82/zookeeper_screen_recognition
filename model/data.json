@@ -1,11 +1,14 @@
 {
   "label_name_list": [
     "battle",
+    "battle_7",
     "battle_result",
     "blank",
-    "check_out_all_the_events_dialog",
     "circle_fade",
     "connecting_server_dialog",
+    "event_go_for_it",
+    "event_no_battle",
+    "exit_practice_mode_dialog",
     "gift_box",
     "kiteretsu",
     "level_up",
