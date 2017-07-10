@@ -11,7 +11,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     label_state_path = os.path.join('label','state')
-    shutil.rmtree(label_state_path)
+    shutil.rmtree(label_state_path,ignore_errors=True)
     _util.makedirs(label_state_path)
 
     raw_image_timestamp_list = os.listdir('raw_image')
