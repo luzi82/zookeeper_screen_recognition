@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('--unknown_only', action='store_true', help="unknown_only")
     args = parser.parse_args()
 
-    shutil.rmtree('guess',ignore_errors=True)
+    shutil.rmtree('output',ignore_errors=True)
     
     sc = classifier_state.StateClassifier(MODEL_PATH)
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
             _, img_fn_t = os.path.split(img_fn)
             img = classifier_state.load_img(img_fn)
             label, _ = sc.get_state(img)
-            out_fn_dir = os.path.join('guess',timestamp,label)
+            out_fn_dir = os.path.join('output',timestamp,label)
             out_fn = os.path.join(out_fn_dir,img_fn_t)
             _util.makedirs(out_fn_dir)
             shutil.copyfile( img_fn, out_fn )
