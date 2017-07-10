@@ -15,19 +15,18 @@ HEIGHT = classifier_state_model.HEIGHT
 
 def sample_list_to_data_set(sample_list, label_count):
     fn_list = [ sample['fn'] for sample in sample_list ]
-    img_list = load_img_list(fn_list, WIDTH, HEIGHT)
+    img_list = load_img_list(fn_list)
     label_idx_list = np.array([ sample['label_idx'] for sample in sample_list ])
     label_onehot_list = np_utils.to_categorical(label_idx_list, label_count)
     return img_list, label_onehot_list
 
-def load_img_list(fn_list,width,height):
-    img_list = [ load_img(fn, width, height) for fn in fn_list ]
+def load_img_list(fn_list):
+    img_list = [ load_img(fn) for fn in fn_list ]
     return np.array(img_list)
 
-def load_img(fn, width, height):
+def load_img(fn):
     img = classifier_state.load_img(fn)
-    img = cv2.resize(img,dsize=(width,height),interpolation=cv2.INTER_AREA)
-    img = classifier_state.append_xy_layer(img)
+    img = classifier_state.preprocess_img(img)
     return img
 
 if __name__ == '__main__':

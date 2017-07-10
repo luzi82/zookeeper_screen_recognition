@@ -3,6 +3,7 @@ import json
 import cv2
 import numpy as np
 from functools import lru_cache
+import _util
 
 MODEL_PATH = 'model'
 WEIGHT_FILENAME = 'classifier_state.hdf5'
@@ -13,8 +14,11 @@ import classifier_state_model
 WIDTH  = classifier_state_model.WIDTH
 HEIGHT = classifier_state_model.HEIGHT
 
-def load_img(fn):
-    img = cv2.imread(fn).astype('float32')*2/255-1
+load_img = _util.load_img
+
+def preprocess_img(img):
+    img = cv2.resize(img,dsize=(WIDTH,HEIGHT),interpolation=cv2.INTER_AREA)
+    img = append_xy_layer(img)
     return img
 
 @lru_cache(maxsize=4)
@@ -44,9 +48,7 @@ class StateClassifier:
         self.model.load_weights(weight_path)
 
     def get_state(self, img):
-        #print(img.shape)
-        img = cv2.resize(img,dsize=(classifier_state_model.WIDTH,classifier_state_model.HEIGHT),interpolation=cv2.INTER_AREA)
-        img = append_xy_layer(img)
+        img = preprocess_img(img)
         p = self.model.predict(np.expand_dims(img, axis=0))
         score = np.max(p)
         label_idx = np.argmax(p)
