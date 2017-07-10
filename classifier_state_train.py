@@ -36,6 +36,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='state classifier trainer')
     parser.add_argument('epochs', nargs='?', type=int, help="epochs count")
     parser.add_argument('--testonly', action='store_true', help="test only")
+    parser.add_argument('--summaryonly', action='store_true', help="summary only")
     args = parser.parse_args()
 
     assert((args.epochs!=None)or(args.testonly))
@@ -71,6 +72,9 @@ if __name__ == '__main__':
 
     model = classifier_state_model.create_model(label_count)
     model.summary()
+    
+    if args.summaryonly:
+        quit()
     
     model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
         
