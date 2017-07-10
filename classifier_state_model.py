@@ -1,5 +1,5 @@
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D
-from keras.layers import Dropout, Flatten, Dense, BatchNormalization
+from keras.layers import Dropout, Flatten, Dense, BatchNormalization, Activation
 from keras.models import Sequential
 from keras import regularizers
 
@@ -40,6 +40,7 @@ def create_model(label_count):
     model.add(Dense(256, activation='elu', activity_regularizer=regularizers.l1(0.0001)))
     model.add(BatchNormalization())
     model.add(Dropout(2-PHI))
-    model.add(Dense(label_count, activation='softmax'))
+    model.add(Dense(label_count, kernel_regularizer=regularizers.l1(0.01/(label_count*256))))
+    model.add(Activation('softmax'))
     return model
 
