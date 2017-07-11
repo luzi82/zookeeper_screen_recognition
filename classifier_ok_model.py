@@ -2,9 +2,12 @@ from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMax
 from keras.layers import Dropout, Flatten, Dense, BatchNormalization, Activation
 from keras.models import Sequential
 from keras import regularizers
+import _util
+import cv2
+import numpy as np
 
 WIDTH = 18
-HEIGHT = 6
+HEIGHT = 64
 CROP_X0 = 54
 CROP_X1 = 90
 CROP_Y0 = 128
@@ -15,11 +18,12 @@ def preprocess_img(img):
     img = img[CROP_X0:CROP_X1,CROP_Y0:,:]
     img = cv2.resize(img,dsize=(WIDTH,HEIGHT),interpolation=cv2.INTER_AREA)
     img = np.append(img,_XY1_LAYER,axis=2)
+    assert(img.shape == (HEIGHT, WIDTH, 6))
     return img
 
-def create_model(label_count):
+def create_model():
     model = Sequential()
-    model.add(Conv2D(filters=32, kernel_size=1, padding='same', activation='elu', input_shape=(HEIGHT,WIDTH,5)))
+    model.add(Conv2D(filters=32, kernel_size=1, padding='same', activation='elu', input_shape=(HEIGHT,WIDTH,6)))
     model.add(Conv2D(filters=32, kernel_size=3, padding='same', activation='elu'))
     model.add(Conv2D(filters=32, kernel_size=1, padding='same', activation='elu'))
     model.add(Conv2D(filters=32, kernel_size=3, padding='same', activation='elu'))

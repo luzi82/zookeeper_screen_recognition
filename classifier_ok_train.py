@@ -9,24 +9,33 @@ from keras.callbacks import ModelCheckpoint
 import json
 import classifier_ok_model
 import classifier_ok
+import csv
 
 WIDTH  = classifier_ok_model.WIDTH
 HEIGHT = classifier_ok_model.HEIGHT
 
-def sample_list_to_data_set(sample_list, label_count):
+def sample_list_to_data_set(sample_list):
     fn_list = [ sample['fn'] for sample in sample_list ]
-    img_list = load_img_list(fn_list, WIDTH, HEIGHT)
-    label_idx_list = np.array([ sample['label_idx'] for sample in sample_list ])
-    label_onehot_list = np_utils.to_categorical(label_idx_list, label_count)
-    return img_list, label_onehot_list
+    img_list = load_img_list(fn_list)
+    ok_list_list = []
+    for sample in sample_list:
+        ok_list = [ 1 if ((i>=sample['y'])and(i<sample['y']+sample['h'])) else -1 for i in range(256) ]
+        ok_list = np.array(ok_list)
+        ok_list = ok_list[128:]
+        ok_list = np.reshape(ok_list,(HEIGHT,2))
+        ok_list = np.mean(ok_list,axis=1)
+        ok_list_list.append(ok_list)
+    ok_list_list = np.array(ok_list_list)
+    ok_list_list = np.reshape(ok_list_list,(len(sample_list), HEIGHT) )
+    return img_list, ok_list_list
 
-def load_img_list(fn_list,width,height):
-    img_list = [ load_img(fn, width, height) for fn in fn_list ]
+def load_img_list(fn_list):
+    img_list = [ load_img(fn) for fn in fn_list ]
     return np.array(img_list)
 
-def load_img(fn, width, height):
+def load_img(fn):
     img = classifier_ok.load_img(fn)
-    img = classifier_ok.preprocess_img(img)
+    img = classifier_ok_model.preprocess_img(img)
     return img
 
 if __name__ == '__main__':
@@ -40,64 +49,41 @@ if __name__ == '__main__':
 
     assert((args.epochs!=None)or(args.testonly))
 
-    label_state_path = os.path.join('label','state')
-    label_name_list = os.listdir(label_state_path)
-    label_name_list = filter(lambda v:os.path.isfile(os.path.join(label_state_path,v)),label_name_list)
-    label_name_list = filter(lambda v:v.endswith('.txt'),label_name_list)
-    label_name_list = [ i[:-4] for i in label_name_list]
-    label_name_list = sorted(label_name_list)
-    
-    label_count = len(label_name_list)
-
-    label_name_to_idx_dict = { label_name_list[i]:i for i in range(label_count) }
-
+    sample_csv_path = os.path.join('label','ok.txt')
     sample_list = []
-    for label_name, label_idx in label_name_to_idx_dict.items():
-        img_fn_list_fn = os.path.join(label_state_path,'{}.txt'.format(label_name))
-        with open(img_fn_list_fn, mode='rt', encoding='utf-8') as fin:
-            img_fn_list = fin.readlines()
-        img_fn_list = [ img_fn.strip() for img_fn in img_fn_list ]
-        sample_list += [{'fn':img_fn, 'label_idx':label_idx, 'label_name': label_name} for img_fn in img_fn_list ]
+    with open(sample_csv_path,'r') as fin:
+        for line in csv.reader(fin):
+            assert(len(line)==3)
+            sample_list.append({'fn':line[0],'y':int(line[1]),'h':int(line[2])})
 
     random.shuffle(sample_list)
 
-    #json.dump(sample_list, fp=sys.stdout, indent=2)
-    
     test_count = int(len(sample_list)/10)
 
     train_sample_list = sample_list[test_count:-test_count]
     test_sample_list  = sample_list[:test_count]
     valid_sample_list = sample_list[-test_count:]
 
-    model = classifier_ok_model.create_model(label_count)
+    model = classifier_ok_model.create_model()
     model.summary()
     
     if args.summaryonly:
         quit()
     
-    model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='rmsprop', loss='mean_squared_error')
         
     if not args.testonly:
-        j = {
-            'label_name_list': label_name_list
-        }
-        with open(os.path.join('model','data.json'),'w') as fout:
-            json.dump(j, fp=fout, indent=2)
-            fout.write('\n')
-
-        train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_count)
-        valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_count)
+        train_img_list, train_ok_list_list = sample_list_to_data_set(train_sample_list)
+        valid_img_list, valid_ok_list_list = sample_list_to_data_set(valid_sample_list)
         
         epochs = args.epochs
         checkpointer = ModelCheckpoint(filepath='model/classifier_ok.hdf5', verbose=1, save_best_only=True)
-        model.fit(train_img_list, train_label_onehot_list,
-            validation_data=(valid_img_list, valid_label_onehot_list),
+        model.fit(train_img_list, train_ok_list_list,
+            validation_data=(valid_img_list, valid_ok_list_list),
             epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
 
-    
     model.load_weights('model/classifier_ok.hdf5')
 
-    test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_count)
-    test_predictions = [np.argmax(model.predict(np.expand_dims(img_list, axis=0))) for img_list in test_img_list]
-    test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
-    print('Test accuracy: %.4f' % test_accuracy)
+    test_img_list,  test_ok_list_list  = sample_list_to_data_set(test_sample_list)
+    test_loss = model.test_on_batch(test_img_list,  test_ok_list_list)
+    print('Test loss: %.4f' % test_loss)

@@ -34,7 +34,7 @@ def xy_layer(w,h):
 def xy1_layer(w,h):
     ret = xy_layer(w,h)
 
-    oo = np.ones(shape=(h,w,1),type=np.float)
+    oo = np.ones(shape=(h,w,1),dtype=np.float)
     ret = np.append(ret,oo,axis=2)
 
     return ret

@@ -6,27 +6,17 @@ from functools import lru_cache
 import _util
 
 MODEL_PATH = 'model'
-WEIGHT_FILENAME = 'classifier_state.hdf5'
+WEIGHT_FILENAME = 'classifier_ok.hdf5'
 DATA_FILENAME   = 'data.json'
 
-import classifier_state_model
+import classifier_ok_model
 
-WIDTH  = classifier_state_model.WIDTH
-HEIGHT = classifier_state_model.HEIGHT
+WIDTH  = classifier_ok_model.WIDTH
+HEIGHT = classifier_ok_model.HEIGHT
 
 load_img = _util.load_img
 
-def preprocess_img(img):
-    img = cv2.resize(img,dsize=(WIDTH,HEIGHT),interpolation=cv2.INTER_AREA)
-    img = append_xy_layer(img)
-    return img
-
-@lru_cache(maxsize=4)
-def xy_layer():
-    return _util.xy_layer(WIDTH,HEIGHT)
-
-def append_xy_layer(img):
-    return np.append(img,xy_layer(),axis=2)
+preprocess_img = classifier_ok_model.preprocess_img
 
 class StateClassifier:
 
@@ -35,7 +25,7 @@ class StateClassifier:
         data_path   = os.path.join(model_path, DATA_FILENAME)
         with open(data_path,'r') as fin:
             self.data = json.load(fin)
-        self.model = classifier_state_model.create_model(len(self.data['label_name_list']))
+        self.model = classifier_ok_model.create_model(len(self.data['label_name_list']))
         self.model.load_weights(weight_path)
 
     def get_state(self, img):
