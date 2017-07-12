@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from functools import lru_cache
 import csv
+import shutil
 
 def get_label_state_list():
     label_state_path = os.path.join('label','state')
@@ -64,3 +65,7 @@ def write_csv(fn,v_dict_list,col_name_list):
         csv_out = csv.writer(fout)
         for v_dict in v_dict_list:
             csv_out.writerow([v_dict[col_name] for col_name in col_name_list])
+
+def reset_dir(out_dir):
+    shutil.rmtree(out_dir,ignore_errors=True)
+    os.makedirs(out_dir)

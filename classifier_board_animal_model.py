@@ -14,7 +14,9 @@ BOARD_HEIGHT = ICON_HEIGHT * ICON_COUNT
 ORI_HEIGHT = 1136
 ORI_CROP_Y = 332
 
-INPUT_SHAPE = (ICON_COUNT*ICON_COUNT,ICON_HEIGHT,ICON_WIDTH,5)
+PHI = _util.PHI
+
+INPUT_SHAPE = (ICON_HEIGHT,ICON_WIDTH,5)
 
 _XY_LAYER = _util.xy_layer(ICON_WIDTH, ICON_HEIGHT)
 _XY_LAYER = np.tile(_XY_LAYER,ICON_COUNT*ICON_COUNT)
@@ -28,13 +30,12 @@ def preprocess_img(img):
     img_list = [img[i*ICON_HEIGHT:(i+1)*ICON_HEIGHT,j*ICON_WIDTH:(j+1)*ICON_WIDTH,:]for i in range(ICON_COUNT) for j in range(ICON_COUNT)]
     img_list = np.array(img_list)
     img_list = np.append(img_list,_XY_LAYER,axis=3)
-    assert(img_list.shape==INPUT_SHAPE)
+    assert(img_list.shape==(ICON_COUNT*ICON_COUNT,ICON_HEIGHT,ICON_WIDTH,5))
     return img_list
 
 def create_model(label_count):
     model = Sequential()
-    model.add(Input(shape=INPUT_SHAPE))
-    model.add(Conv2D(filters=32, kernel_size=1, padding='valid', activation='elu'))
+    model.add(Conv2D(filters=32, kernel_size=1, padding='valid', activation='elu', input_shape=INPUT_SHAPE))
     model.add(Conv2D(filters=32, kernel_size=2, padding='valid', activation='elu'))
     model.add(Conv2D(filters=32, kernel_size=1, padding='valid', activation='elu'))
     model.add(BatchNormalization())
