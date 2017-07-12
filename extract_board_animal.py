@@ -6,8 +6,8 @@ import os
 import shutil
 import numpy as np
 
-ICON_WIDTH  = classifier_board_animal_model.ICON_WIDTH*2
-ICON_HEIGHT = classifier_board_animal_model.ICON_HEIGHT*2
+ICON_WIDTH  = classifier_board_animal_model.ICON_WIDTH
+ICON_HEIGHT = classifier_board_animal_model.ICON_HEIGHT
 ICON_COUNT = classifier_board_animal_model.ICON_COUNT
 BOARD_WIDTH = ICON_WIDTH * ICON_COUNT
 BOARD_HEIGHT = ICON_HEIGHT * ICON_COUNT
@@ -17,15 +17,18 @@ ORI_CROP_Y = classifier_board_animal_model.ORI_CROP_Y
 SHAPE = (ICON_COUNT*ICON_COUNT,ICON_HEIGHT,ICON_WIDTH,3)
 
 def preprocess_img(img):
-    y0 = round(img.shape[0]*ORI_CROP_Y/ORI_HEIGHT)
-    y1 = y0 + img.shape[1]
-    img = img[y0:y1,:,:]
-    assert(img.shape==(BOARD_HEIGHT,BOARD_WIDTH,3))
-    img_list = [img[i*ICON_HEIGHT:(i+1)*ICON_HEIGHT,j*ICON_WIDTH:(j+1)*ICON_WIDTH,:]for i in range(ICON_COUNT) for j in range(ICON_COUNT)]
-    img_list = np.array(img_list)
-    print(img_list.shape)
-    assert(img_list.shape==SHAPE)
-    return img_list
+#    y0 = round(img.shape[0]*ORI_CROP_Y/ORI_HEIGHT)
+#    y1 = y0 + img.shape[1]
+#    img = img[y0:y1,:,:]
+#    assert(img.shape==(BOARD_HEIGHT,BOARD_WIDTH,3))
+#    img_list = [img[i*ICON_HEIGHT:(i+1)*ICON_HEIGHT,j*ICON_WIDTH:(j+1)*ICON_WIDTH,:]for i in range(ICON_COUNT) for j in range(ICON_COUNT)]
+#    img_list = np.array(img_list)
+#    print(img_list.shape)
+#    assert(img_list.shape==SHAPE)
+#    return img_list
+    ret = classifier_board_animal_model.preprocess_img(img)
+    ret = ret[:,:,:,:3]
+    return ret
 
 if __name__ == '__main__':
     import argparse

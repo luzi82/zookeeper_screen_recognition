@@ -6,8 +6,8 @@ import _util
 import cv2
 import numpy as np
 
-ICON_WIDTH  = 9
-ICON_HEIGHT = 9
+ICON_WIDTH  = 18
+ICON_HEIGHT = 18
 ICON_COUNT = 8
 BOARD_WIDTH = ICON_WIDTH * ICON_COUNT
 BOARD_HEIGHT = ICON_HEIGHT * ICON_COUNT
@@ -26,7 +26,8 @@ def preprocess_img(img):
     y0 = int(img.shape[0]*ORI_CROP_Y/ORI_HEIGHT)
     y1 = y0 + img.shape[1]
     img = img[y0:y1,:,:]
-    img = cv2.resize(img,dsize=(BOARD_WIDTH,BOARD_HEIGHT),interpolation=cv2.INTER_AREA)
+    #img = cv2.resize(img,dsize=(BOARD_WIDTH,BOARD_HEIGHT),interpolation=cv2.INTER_AREA)
+    assert(img.shape==(BOARD_HEIGHT,BOARD_WIDTH,3))
     img_list = [img[i*ICON_HEIGHT:(i+1)*ICON_HEIGHT,j*ICON_WIDTH:(j+1)*ICON_WIDTH,:]for i in range(ICON_COUNT) for j in range(ICON_COUNT)]
     img_list = np.array(img_list)
     img_list = np.append(img_list,_XY_LAYER,axis=3)
