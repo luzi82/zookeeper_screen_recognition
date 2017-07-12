@@ -27,7 +27,7 @@ if __name__ == '__main__':
     fn_list = _util.readlines(os.path.join('label','state','battle.txt'))
 
     if args.timestamp:
-        fn_list = filter(fn_list,lambda v:args.timestamp in v)
+        fn_list = filter(lambda v:args.timestamp in v,fn_list)
 
     if args.unknown_only:
         known_list = _util.read_csv(os.path.join('label','board_animal.csv'),add_board_animal.CSV_COL_LIST)
