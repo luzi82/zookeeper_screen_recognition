@@ -69,3 +69,9 @@ def write_csv(fn,v_dict_list,col_name_list):
 def reset_dir(out_dir):
     shutil.rmtree(out_dir,ignore_errors=True)
     os.makedirs(out_dir)
+
+def readlines(fn):
+    with open(fn,'rt',encoding='utf-8') as fin:
+        ret = fin.readlines()
+    ret = [ i.strip() for i in ret ]
+    return ret

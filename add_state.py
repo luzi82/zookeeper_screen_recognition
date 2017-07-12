@@ -1,6 +1,7 @@
 import glob
 import os
 import sys
+import add_board_animal
 
 if __name__ == '__main__':
     import argparse

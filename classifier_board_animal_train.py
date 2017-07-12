@@ -110,13 +110,6 @@ if __name__ == '__main__':
     model.load_weights(weight_fn)
 
     test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_list)
-    #for i in range(10):
-    #    print(test_sample_list[i]['fn'],file=sys.stderr)
-    #    print(test_sample_list[i]['pos'],file=sys.stderr)
-    #    print(test_label_onehot_list[i],file=sys.stderr)
-    #    tmp_img=(test_img_list[:,:,:,:3][i]+1)*128
-    #    print(tmp_img.shape)
-    #    cv2.imwrite('tmp{}.png'.format(i),tmp_img)
     test_predictions = [np.argmax(model.predict(np.expand_dims(img_list, axis=0))) for img_list in test_img_list]
     test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
     print('Test accuracy: %.4f' % test_accuracy)
