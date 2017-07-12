@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import cv2
+from functools import lru_cache
+import csv
 
 def get_label_state_list():
     label_state_path = os.path.join('label','state')
@@ -38,3 +40,27 @@ def xy1_layer(w,h):
     ret = np.append(ret,oo,axis=2)
 
     return ret
+
+@lru_cache(maxsize=4)
+def get_raw_image_timestamp_list():
+    raw_image_timestamp_list = os.listdir('raw_image')
+    raw_image_timestamp_list = filter(lambda v:os.path.isdir(os.path.join('raw_image',v)),raw_image_timestamp_list)
+    raw_image_timestamp_list = [ int(i) for i in raw_image_timestamp_list ]
+    return raw_image_timestamp_list
+
+def get_timestamp(v):
+    return max(filter(lambda i:i<v,get_raw_image_timestamp_list()))
+
+def read_csv(fn,col_name_list):
+    ret = []
+    with open(fn,'r') as fin:
+        for line in csv.reader(fin):
+            assert(len(line)==len(col_name_list))
+            ret.append({col_name_list[i]:line[i] for i in range(len(col_name_list))})
+    return ret
+
+def write_csv(fn,v_dict_list,col_name_list):
+    with open(fn,'w') as fout:
+        csv_out = csv.writer(fout)
+        for v_dict in v_dict_list:
+            csv_out.writerow([v_dict[col_name] for col_name in col_name_list])
