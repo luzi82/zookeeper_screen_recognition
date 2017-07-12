@@ -14,7 +14,9 @@ if __name__ == '__main__':
 
     csv_path = os.path.join('label','board_animal.csv')
     if os.path.isfile(csv_path):
-        entry_dict = { '{} {}'.format(i['fn'],i['pos']):i for i in _util.read_csv(csv_path,CSV_COL_LIST) }
+        tmp = _util.read_csv(csv_path,CSV_COL_LIST)
+        tmp = filter(lambda v:len(v['pos'])==2,tmp)
+        entry_dict = { '{} {}'.format(i['fn'],i['pos']):i for i in tmp }
     else:
         entry_dict = {}
 
