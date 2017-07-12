@@ -31,7 +31,7 @@ if __name__ == '__main__':
         label_path = os.path.join('input',label_name)
         if not os.path.isdir(label_path):
             continue
-        data_dict['label_list'].append(label_name)
+        #data_dict['label_list'].append(label_name)
         for image_fn in os.listdir(label_path):
             if not image_fn.endswith('.png'):
                 continue
@@ -53,7 +53,7 @@ if __name__ == '__main__':
                 'label':label_name
             }
 
-    data_dict['label_list'] = sorted(list(set(data_dict['label_list'])))
+    #data_dict['label_list'] = sorted(list(set(data_dict['label_list'])))
 
     entry_key_list = sorted(entry_dict.keys())
     entry_list = [ entry_dict[i] for i in entry_key_list ]
