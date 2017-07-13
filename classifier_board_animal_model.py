@@ -12,8 +12,10 @@ ICON_COUNT = 8
 ICON_COUNT_2 = ICON_COUNT*ICON_COUNT
 BOARD_WIDTH = ICON_WIDTH * ICON_COUNT
 BOARD_HEIGHT = ICON_HEIGHT * ICON_COUNT
-ORI_HEIGHT = 1136
-ORI_CROP_Y = 332
+#ORI_HEIGHT = 1136
+#ORI_CROP_Y = 332
+CROP_Y0 = 75
+CROP_Y1 = 75+144
 
 PHI = _util.PHI
 
@@ -24,8 +26,9 @@ _XY_LAYER = np.tile(_XY_LAYER,ICON_COUNT*ICON_COUNT)
 _XY_LAYER = np.reshape(_XY_LAYER,(ICON_COUNT*ICON_COUNT,ICON_WIDTH, ICON_HEIGHT,2))
 
 def preprocess_img(img):
-    y0 = int(img.shape[0]*ORI_CROP_Y/ORI_HEIGHT)
-    y1 = y0 + img.shape[1]
+    #y0 = int(img.shape[0]*ORI_CROP_Y/ORI_HEIGHT)
+    y0 = CROP_Y0
+    y1 = CROP_Y1
     img = img[y0:y1,:,:]
     #img = cv2.resize(img,dsize=(BOARD_WIDTH,BOARD_HEIGHT),interpolation=cv2.INTER_AREA)
     assert(img.shape==(BOARD_HEIGHT,BOARD_WIDTH,3))

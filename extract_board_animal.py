@@ -11,7 +11,7 @@ ICON_HEIGHT = classifier_board_animal_model.ICON_HEIGHT
 ICON_COUNT = classifier_board_animal_model.ICON_COUNT
 BOARD_WIDTH = ICON_WIDTH * ICON_COUNT
 BOARD_HEIGHT = ICON_HEIGHT * ICON_COUNT
-ORI_HEIGHT = classifier_board_animal_model.ORI_HEIGHT
+#ORI_HEIGHT = classifier_board_animal_model.ORI_HEIGHT
 ORI_CROP_Y = classifier_board_animal_model.ORI_CROP_Y
 
 SHAPE = (ICON_COUNT*ICON_COUNT,ICON_HEIGHT,ICON_WIDTH,3)
