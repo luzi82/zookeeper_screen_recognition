@@ -55,12 +55,14 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='state classifier trainer')
-    parser.add_argument('epochs', nargs='?', type=int, help="epochs count")
+    parser.add_argument('epochs20', nargs='?', type=int, help="epochs count")
+    parser.add_argument('epochs200', nargs='?', type=int, help="epochs count")
     parser.add_argument('--testonly', action='store_true', help="test only")
     parser.add_argument('--summaryonly', action='store_true', help="summary only")
     args = parser.parse_args()
 
-    assert((args.epochs!=None)or(args.testonly))
+    assert((args.epochs20!=None)or(args.testonly))
+    assert((args.epochs20==None)==(args.epochs200==None))
     
     out_dir = os.path.join('model','board_animal')
 
@@ -101,12 +103,17 @@ if __name__ == '__main__':
         train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_list)
         valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_list)
         
-        epochs = args.epochs
         checkpointer = ModelCheckpoint(filepath=weight_fn, verbose=1, save_best_only=True)
+        epochs = args.epochs20
         model.fit(train_img_list, train_label_onehot_list,
             validation_data=(valid_img_list, valid_label_onehot_list),
             epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
 
+        epochs = args.epochs200
+        #checkpointer = ModelCheckpoint(filepath=weight_fn, verbose=1, save_best_only=True)
+        model.fit(train_img_list, train_label_onehot_list,
+            validation_data=(valid_img_list, valid_label_onehot_list),
+            epochs=epochs, batch_size=200, callbacks=[checkpointer], verbose=1, initial_epoch=args.epochs20)
     
     model.load_weights(weight_fn)
 
