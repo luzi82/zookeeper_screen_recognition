@@ -10,6 +10,7 @@ import add_board_animal
 import cv2
 import numpy as np
 import json
+import time
 
 ICON_COUNT_2 = classifier_board_animal_model.ICON_COUNT_2
 SIZE = 8
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     fn_list = _util.readlines(os.path.join('label','state','battle.txt'))
 
     if args.timestamp:
-        fn_list = filter(lambda v:args.timestamp in v,fn_list)
+        fn_list = list(filter(lambda v:args.timestamp in v,fn_list))
 
     if args.unknown_only:
         known_list = _util.read_csv(os.path.join('label','board_animal.csv'),add_board_animal.CSV_COL_LIST)
@@ -41,6 +42,7 @@ if __name__ == '__main__':
     if args.json:
         j_out = []
 
+    fn_list_len = len(fn_list)
     for fn in fn_list:
         if len(list(filter(lambda v:fn in v,known_list))) >= ICON_COUNT_2:
             continue
@@ -48,7 +50,13 @@ if __name__ == '__main__':
         img_list = classifier_board_animal_model.preprocess_img(img)
         img_list = img_list[:,:,:,:3]
         img_list = ((img_list+1)*255/2).astype(np.uint8)
+        ttime = time.time()
+        print('asf')
         predict_list, _ = clr.predict(img)
+        print('fffa')
+        ttime = time.time() - ttime
+        if fn_list_len == 1:
+            print('time consumed: {}ms'.format(int(ttime*1000)))
         if not args.json:
             for i in range(len(predict_list)):
                 ii = '%02d'%i
