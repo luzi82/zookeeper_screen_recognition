@@ -22,11 +22,19 @@ class BoardAnimalClassifier:
         self.model.load_weights(weight_path)
 
     def predict(self, img):
+        import time
+        tt = time.time()
         img_list = classifier_board_animal_model.preprocess_img(img)
+        #print(str(time.time()-tt))
         p_list_list = self.model.predict(img_list)
+        #print(str(time.time()-tt))
         score_list = np.max(p_list_list,axis=1)
+        #print(str(time.time()-tt))
         label_idx_list = np.argmax(p_list_list,axis=1)
-        return [self.data['label_list'][label_idx] for label_idx in label_idx_list], score_list
+        #print(str(time.time()-tt))
+        r0, r1 = [self.data['label_list'][label_idx] for label_idx in label_idx_list], score_list
+        #print(str(time.time()-tt))
+        return r0, r1
 
 if __name__ == '__main__':
     import argparse

@@ -51,9 +51,7 @@ if __name__ == '__main__':
         img_list = img_list[:,:,:,:3]
         img_list = ((img_list+1)*255/2).astype(np.uint8)
         ttime = time.time()
-        print('asf')
         predict_list, _ = clr.predict(img)
-        print('fffa')
         ttime = time.time() - ttime
         if fn_list_len == 1:
             print('time consumed: {}ms'.format(int(ttime*1000)))
