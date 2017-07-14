@@ -124,4 +124,4 @@ if __name__ == '__main__':
     test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
     print('Test accuracy: %.4f' % test_accuracy)
     time_used = int((end_time-start_time)*1000)
-    print('{}/{}s = {}/s'.format(len(test_img_list),time_used,len(test_img_list)*1000/time_used))
+    print('{}/{}ms = {}/s'.format(len(test_img_list),time_used,len(test_img_list)*1000/time_used))
