@@ -11,6 +11,7 @@ import classifier_board_animal_model
 import _util
 import numpy as np
 import add_board_animal as aba
+import time
 
 ICON_WIDTH  = classifier_board_animal_model.ICON_WIDTH
 ICON_HEIGHT = classifier_board_animal_model.ICON_HEIGHT
@@ -110,6 +111,10 @@ if __name__ == '__main__':
     model.load_weights(weight_fn)
 
     test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_list)
+    start_time = time.time()
     test_predictions = [np.argmax(model.predict(np.expand_dims(img_list, axis=0))) for img_list in test_img_list]
+    end_time = time.time()
     test_accuracy = np.sum(np.array(test_predictions)==np.argmax(test_label_onehot_list, axis=1))/len(test_predictions)
     print('Test accuracy: %.4f' % test_accuracy)
+    time_used = int((end_time-start_time)*1000)
+    print('{}/{}s = {}/s'.format(len(test_img_list),time_used,len(test_img_list)*1000/time_used))
