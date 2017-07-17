@@ -1,7 +1,7 @@
 import os
-import _util
+from zookeeper_screen_recognition import _util
 import add_board_animal as aba
-import classifier_board_animal_train
+from zookeeper_screen_recognition import classifier_board_animal_train
 import cv2
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@ from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMax
 from keras.layers import Dropout, Flatten, Dense, BatchNormalization, Activation
 from keras.models import Sequential
 from keras import regularizers
-import _util
+from . import _util
 import cv2
 import numpy as np
 

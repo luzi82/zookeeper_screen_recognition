@@ -3,12 +3,12 @@ import json
 import cv2
 import numpy as np
 from functools import lru_cache
-import _util
+from . import _util
 
 MODEL_PATH = 'model'
 WEIGHT_FILENAME = 'classifier_ok.hdf5'
 
-import classifier_ok_model
+from . import classifier_ok_model
 
 WIDTH  = classifier_ok_model.WIDTH
 HEIGHT = classifier_ok_model.HEIGHT

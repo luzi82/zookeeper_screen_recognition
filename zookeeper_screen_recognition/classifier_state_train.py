@@ -7,8 +7,8 @@ import numpy as np
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 import json
-import classifier_state_model
-import classifier_state
+from . import classifier_state_model
+from . import classifier_state
 
 WIDTH  = classifier_state_model.WIDTH
 HEIGHT = classifier_state_model.HEIGHT

@@ -7,8 +7,8 @@ import numpy as np
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 import json
-import classifier_board_animal_model
-import _util
+from . import classifier_board_animal_model
+from . import _util
 import numpy as np
 import add_board_animal as aba
 import time

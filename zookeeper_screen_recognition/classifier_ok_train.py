@@ -7,8 +7,8 @@ import numpy as np
 from keras.utils import np_utils
 from keras.callbacks import ModelCheckpoint
 import json
-import classifier_ok_model
-import classifier_ok
+from . import classifier_ok_model
+from . import classifier_ok
 import csv
 
 WIDTH  = classifier_ok_model.WIDTH

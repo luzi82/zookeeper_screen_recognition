@@ -1,7 +1,7 @@
 import glob
 import os
 import sys
-import _util
+from zookeeper_screen_recognition import _util
 import json
 
 CSV_COL_LIST = ['fn','idx','pos','label']

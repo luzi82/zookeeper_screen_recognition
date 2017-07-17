@@ -3,13 +3,13 @@ import json
 import cv2
 import numpy as np
 from functools import lru_cache
-import _util
+from . import _util
 
 MODEL_PATH = os.path.join('model','board_animal')
 WEIGHT_FILENAME = 'weight.hdf5'
 DATA_FILENAME   = 'data.json'
 
-import classifier_board_animal_model
+from . import classifier_board_animal_model
 
 class BoardAnimalClassifier:
 

@@ -1,11 +1,11 @@
 import glob
 import os
 import sys
-import _util
+from zookeeper_screen_recognition import _util
 import shutil
-import classifier_state
-import classifier_board_animal_model
-import classifier_board_animal
+from zookeeper_screen_recognition import classifier_state
+from zookeeper_screen_recognition import classifier_board_animal_model
+from zookeeper_screen_recognition import classifier_board_animal
 import add_board_animal
 import cv2
 import numpy as np

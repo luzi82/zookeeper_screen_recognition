@@ -3,13 +3,13 @@ import json
 import cv2
 import numpy as np
 from functools import lru_cache
-import _util
+from . import _util
 
 MODEL_PATH = 'model'
 WEIGHT_FILENAME = 'classifier_state.hdf5'
 DATA_FILENAME   = 'data.json'
 
-import classifier_state_model
+from . import classifier_state_model
 
 WIDTH  = classifier_state_model.WIDTH
 HEIGHT = classifier_state_model.HEIGHT
