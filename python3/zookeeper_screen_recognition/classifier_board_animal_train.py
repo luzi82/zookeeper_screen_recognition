@@ -10,7 +10,7 @@ import json
 from . import classifier_board_animal_model
 from . import _util
 import numpy as np
-import add_board_animal as aba
+from . import add_board_animal as aba
 import time
 
 ICON_WIDTH  = classifier_board_animal_model.ICON_WIDTH

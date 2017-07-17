@@ -1,6 +1,6 @@
 import os
 from . import _util
-import add_board_animal as aba
+from . import add_board_animal as aba
 from . import classifier_board_animal_train
 import cv2
 

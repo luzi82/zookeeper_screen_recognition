@@ -6,7 +6,7 @@ import shutil
 from . import classifier_state
 from . import classifier_board_animal_model
 from . import classifier_board_animal
-import add_board_animal
+from . import add_board_animal
 import cv2
 import numpy as np
 import json
