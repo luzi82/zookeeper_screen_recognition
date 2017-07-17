@@ -1,31 +1,15 @@
 {
   "label_name_list": [
     "battle",
-    "battle_7",
     "battle_result",
     "blank",
     "circle_fade",
     "connecting_server_dialog",
-    "event_go_for_it",
-    "event_no_battle",
-    "exit_practice_mode_dialog",
-    "gift_box",
     "kiteretsu",
-    "level_up",
-    "limited_time_sale_dialog",
     "main_menu",
-    "no_cp_dialog",
     "not_zookeeper",
     "ok_dialog",
-    "power_bottle_rematch_dialog",
     "searching_player",
-    "title",
-    "vs_boss_dialog",
-    "zoo",
-    "zoo_boss_go_for_it",
-    "zoo_cell",
-    "zoo_cell_cell",
-    "zoo_events",
-    "zoo_raid_battle_history"
+    "title"
   ]
 }
