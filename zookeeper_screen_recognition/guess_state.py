@@ -1,9 +1,9 @@
 import glob
 import os
 import sys
-from zookeeper_screen_recognition import _util
+from . import _util
 import shutil
-from zookeeper_screen_recognition import classifier_state
+from . import classifier_state
 
 MODEL_PATH = 'model'
 

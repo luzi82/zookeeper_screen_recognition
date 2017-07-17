@@ -1,5 +1,5 @@
-from zookeeper_screen_recognition import _util
-from zookeeper_screen_recognition import classifier_board_animal_model
+from . import _util
+from . import classifier_board_animal_model
 import cv2
 import glob
 import os

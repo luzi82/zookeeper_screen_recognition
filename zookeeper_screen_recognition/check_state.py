@@ -1,5 +1,5 @@
 import os
-from zookeeper_screen_recognition import _util
+from . import _util
 
 if __name__ == '__main__':
     import argparse
