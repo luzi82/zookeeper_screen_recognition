@@ -1,6 +1,7 @@
 {
   "label_list": [
     "a_ape",
+    "a_boss",
     "a_croco",
     "a_elep",
     "a_gira",
@@ -8,6 +9,8 @@
     "a_lion",
     "a_panda",
     "s_bino",
+    "s_boss",
+    "s_bucket",
     "s_clear",
     "s_heart",
     "z_chao"
