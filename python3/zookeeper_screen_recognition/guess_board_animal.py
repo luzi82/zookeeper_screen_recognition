@@ -21,8 +21,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='state label util')
     parser.add_argument('timestamp', nargs='?', help='timestamp')
     parser.add_argument('--unknown_only', action='store_true', help="unknown_only")
+    parser.add_argument('--disagree', action='store_true', help="disagree")
     parser.add_argument('--json', action='store_true', help="json output")
     args = parser.parse_args()
+    
+    assert(not(args.unknown_only and args.disagree))
 
     _util.reset_dir('output')
     
@@ -33,18 +36,22 @@ if __name__ == '__main__':
     if args.timestamp:
         fn_list = list(filter(lambda v:args.timestamp in v,fn_list))
 
-    if args.unknown_only:
+    if args.unknown_only or args.disagree:
         known_list = _util.read_csv(os.path.join('label','board_animal.csv'),add_board_animal.CSV_COL_LIST)
+        known_dict = {'{} {}'.format(i['fn'],i['pos']): i for i in known_list}
         known_list = ['{} {}'.format(i['fn'],i['pos']) for i in known_list]
     else:
         known_list = []
+        known_dict = {}
 
     if args.json:
         j_out = []
 
     fn_list_len = len(fn_list)
     for fn in fn_list:
-        if len(list(filter(lambda v:fn in v,known_list))) >= ICON_COUNT_2:
+        if args.unknown_only and ( len(list(filter(lambda v:fn in v,known_list))) >= ICON_COUNT_2 ):
+            continue
+        if args.disagree and ( len(list(filter(lambda v:fn in v,known_list))) <= 0 ):
             continue
         img = _util.load_img(fn)
         img_list = classifier_board_animal_model.preprocess_img(img)
@@ -58,9 +65,14 @@ if __name__ == '__main__':
         if not args.json:
             for i in range(len(predict_list)):
                 ii = '%02d'%i
-                if '{} {}'.format(fn,ii) in known_list:
+                known_key = '{} {}'.format(fn,ii)
+                if (args.unknown_only) and (known_key in known_list):
+                    continue
+                if (args.disagree) and (not(known_key in known_list)):
                     continue
                 predict = predict_list[i]
+                if (args.disagree) and (predict == known_dict[known_key]['label']):
+                    continue
                 _util.makedirs(os.path.join('output',predict))
                 _, fn_out = os.path.split(fn)
                 fn_out = fn_out[:-4]
