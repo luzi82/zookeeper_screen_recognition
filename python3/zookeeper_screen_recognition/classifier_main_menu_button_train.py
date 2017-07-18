@@ -10,11 +10,11 @@ import json
 from . import classifier_main_menu_button_model
 from . import _util
 import numpy as np
-from . import add_board_animal as aba
 import time
+from . import add_main_menu_button
 
-ICON_WIDTH  = classifier_main_menu_button_model.ICON_WIDTH
-ICON_HEIGHT = classifier_main_menu_button_model.ICON_HEIGHT
+INPUT_WIDTH  = classifier_main_menu_button_model.INPUT_WIDTH
+INPUT_HEIGHT = classifier_main_menu_button_model.INPUT_HEIGHT
 
 def sample_list_to_data_set(v_dict_list, label_list):
     img_list = load_img_list_csv(v_dict_list)
@@ -25,49 +25,34 @@ def sample_list_to_data_set(v_dict_list, label_list):
 
 def load_img_list_csv(v_dict_list):
     #print(v_dict_list)
-    vv_list_dict = {}
-    for i in range(len(v_dict_list)):
-        v_dict = v_dict_list[i]
-        fn = v_dict['fn']
-        if fn not in vv_list_dict:
-            vv_list_dict[fn] = []
-        vv_list_dict[fn].append((i,int(v_dict['pos'])))
-    #print(vv_list_dict)
-    ret = [None] * len(v_dict_list)
-    for fn, pos_list in vv_list_dict.items():
-        img_list = load_img_list_fn(fn)
-        for i, pos in pos_list:
-            ret[i] = img_list[pos]
+    ret = []
+    for v_dict in v_dict_list:
+        ret.append(load_img_fn(v_dict['fn']))
     ret = np.array(ret)
-    assert(ret.shape==(len(v_dict_list),ICON_HEIGHT,ICON_WIDTH,5))
+    assert(ret.shape==(len(v_dict_list),INPUT_HEIGHT,INPUT_WIDTH,5))
     return ret
 
-def load_img_list_fn(fn):
+def load_img_fn(fn):
     img = _util.load_img(fn)
-    img_list = classifier_main_menu_button_model.preprocess_img(img)
-    #print(img_list.shape,file=sys.stderr)
-    #print(len(pos_list),file=sys.stderr)
-    #img_list = np.take(img_list,pos_list,axis=0)
-    #print(img_list.shape,file=sys.stderr)
-    return img_list
+    img = classifier_main_menu_button_model.preprocess_img(img)
+    return img
 
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='state classifier trainer')
     parser.add_argument('epochs20', nargs='?', type=int, help="epochs count")
-    parser.add_argument('epochs200', nargs='?', type=int, help="epochs count")
     parser.add_argument('--testonly', action='store_true', help="test only")
     parser.add_argument('--summaryonly', action='store_true', help="summary only")
     args = parser.parse_args()
 
     assert((args.epochs20!=None)or(args.testonly))
-    assert((args.epochs20==None)==(args.epochs200==None))
+    #assert((args.epochs20==None)==(args.epochs200==None))
     
-    out_dir = os.path.join('model','board_animal')
+    out_dir = os.path.join('model','main_menu_button')
 
-    csv_path = os.path.join('label','board_animal.csv')
-    sample_list = _util.read_csv(csv_path,aba.CSV_COL_LIST)
+    csv_path = os.path.join('label','main_menu_button.csv')
+    sample_list = _util.read_csv(csv_path,add_main_menu_button.COL_NAME_LIST)
 
     label_list = [ i['label'] for i in sample_list ]
     label_list = sorted(list(set(label_list)))
@@ -109,12 +94,6 @@ if __name__ == '__main__':
             validation_data=(valid_img_list, valid_label_onehot_list),
             epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
 
-        epochs = args.epochs200
-        #checkpointer = ModelCheckpoint(filepath=weight_fn, verbose=1, save_best_only=True)
-        model.fit(train_img_list, train_label_onehot_list,
-            validation_data=(valid_img_list, valid_label_onehot_list),
-            epochs=epochs, batch_size=200, callbacks=[checkpointer], verbose=1, initial_epoch=args.epochs20)
-    
     model.load_weights(weight_fn)
 
     test_img_list,  test_label_onehot_list  = sample_list_to_data_set(test_sample_list ,label_list)

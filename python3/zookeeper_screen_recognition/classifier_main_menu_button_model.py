@@ -22,9 +22,9 @@ _XY_LAYER = _util.xy_layer(INPUT_WIDTH, INPUT_HEIGHT)
 def preprocess_img(img):
     img = img[CROP_Y0:CROP_Y1,CROP_X0:CROP_X1,:]
     img = cv2.resize(img,dsize=(INPUT_WIDTH,INPUT_HEIGHT),interpolation=cv2.INTER_AREA)
-    img = np.append(img_list,_XY_LAYER,axis=2)
-    img_list = np.reshape(img,(1,INPUT_HEIGHT,INPUT_WIDTH,5))
-    return img_list
+    img = np.append(img,_XY_LAYER,axis=2)
+    assert(img.shape==(INPUT_HEIGHT,INPUT_WIDTH,5))
+    return img
 
 def create_model(label_count):
     model = Sequential()
