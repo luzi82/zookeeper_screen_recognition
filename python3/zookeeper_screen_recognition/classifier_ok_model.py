@@ -6,11 +6,13 @@ from . import _util
 import cv2
 import numpy as np
 
-WIDTH = 18
-HEIGHT = 64
-CROP_X0 = 54
-CROP_X1 = 90
-CROP_Y0 = 128
+SCREEN_WIDTH = 120
+SCREEN_HEIGHT = 213
+WIDTH = Math.floor(SCREEN_WIDTH/16)*2 # ensure even
+HEIGHT = Math.floor(SCREEN_HEIGHT/2)
+CROP_X0 = (SCREEN_WIDTH-WIDTH)/2
+CROP_X1 = CROP_X0+WIDTH
+CROP_Y0 = SCREEN_HEIGHT-HEIGHT
 
 _XY1_LAYER = _util.xy1_layer(WIDTH, HEIGHT)
 

@@ -60,7 +60,11 @@ def read_csv(fn,col_name_list):
             ret.append({col_name_list[i]:line[i] for i in range(len(col_name_list))})
     return ret
 
-def write_csv(fn,v_dict_list,col_name_list):
+def write_csv(fn,v_dict_list,col_name_list,sortkey_func=None):
+    if sortkey_func != None:
+        v_dict_dict = { sortkey_func(v_dict):v_dict for v_dict in v_dict_list }
+        v_dict_dict_key_sort = sorted(v_dict_dict.keys())
+        v_dict_list = [ v_dict_dict[k] for k in v_dict_dict_key_sort ]
     with open(fn,'w') as fout:
         csv_out = csv.writer(fout)
         for v_dict in v_dict_list:
