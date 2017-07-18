@@ -5,14 +5,17 @@ from keras import regularizers
 from . import _util
 import cv2
 import numpy as np
+import math
 
 SCREEN_WIDTH = 120
 SCREEN_HEIGHT = 213
-WIDTH = Math.floor(SCREEN_WIDTH/16)*2 # ensure even
-HEIGHT = Math.floor(SCREEN_HEIGHT/2)
-CROP_X0 = (SCREEN_WIDTH-WIDTH)/2
-CROP_X1 = CROP_X0+WIDTH
-CROP_Y0 = SCREEN_HEIGHT-HEIGHT
+WIDTH = int(math.floor(SCREEN_WIDTH/16))
+HEIGHT = int(math.floor(SCREEN_HEIGHT/4))
+CROP_WIDTH  = WIDTH  * 2
+CROP_HEIGHT = HEIGHT * 2
+CROP_X0 = int((SCREEN_WIDTH-CROP_WIDTH)/2)
+CROP_X1 = CROP_X0+CROP_WIDTH
+CROP_Y0 = SCREEN_HEIGHT-CROP_HEIGHT
 
 _XY1_LAYER = _util.xy1_layer(WIDTH, HEIGHT)
 
