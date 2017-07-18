@@ -5,19 +5,24 @@ import numpy as np
 from functools import lru_cache
 from . import _util
 
-MODEL_PATH = 'model'
-WEIGHT_FILENAME = 'classifier_ok.hdf5'
+MODEL_PATH = os.path.join('model','ok')
+WEIGHT_FILENAME = 'weight.hdf5'
 
 from . import classifier_ok_model
 
+SCREEN_HEIGHT = classifier_ok_model.SCREEN_HEIGHT
 WIDTH  = classifier_ok_model.WIDTH
 HEIGHT = classifier_ok_model.HEIGHT
+CROP_Y0 = classifier_ok_model.CROP_Y0
 
 load_img = _util.load_img
 
 preprocess_img = classifier_ok_model.preprocess_img
 
-_SCORE_LIST = np.array([i*2+128+.5 for i in range(64)]).astype(np.float)
+_SCORE_LIST = np.array(list(range(SCREEN_HEIGHT)))
+_SCORE_LIST = _SCORE_LIST[CROP_Y0:]
+_SCORE_LIST = np.reshape(_SCORE_LIST,(HEIGHT,2))
+_SCORE_LIST = np.mean(_SCORE_LIST,axis=1)
 
 class OkClassifier:
 
