@@ -39,7 +39,8 @@ if __name__ == '__main__':
     parser.add_argument('--summaryonly', action='store_true', help="summary only")
     args = parser.parse_args()
 
-    assert((args.epochs!=None)or(args.testonly))
+    assert((args.epochs20==None)==(args.epochs200==None))
+    assert((args.epochs20!=None)or(args.testonly))
 
     label_state_path = os.path.join('label','state')
     label_name_list = os.listdir(label_state_path)
