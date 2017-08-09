@@ -19,3 +19,13 @@ if __name__ == '__main__':
         _util.makedirs(output_path)
         _, fn2 = os.path.split(sample['fn'])
         shutil.copyfile( sample['fn'], os.path.join(output_path,fn2) )
+
+    sample_fn_set = set([sample['fn'] for sample in sample_list])
+    ok_fn_list = _util.readlines(os.path.join('label','state','ok_dialog.txt'))
+    ok_fn_list = filter(lambda fn:fn not in sample_fn_set,ok_fn_list)
+    
+    output_path = os.path.join('output','_')
+    for fn in ok_fn_list:
+        _util.makedirs(output_path)
+        _, fn2 = os.path.split(fn)
+        shutil.copyfile( fn, os.path.join(output_path,fn2) )
