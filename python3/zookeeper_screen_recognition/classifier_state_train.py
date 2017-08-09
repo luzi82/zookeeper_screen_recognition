@@ -33,7 +33,8 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='state classifier trainer')
-    parser.add_argument('epochs', nargs='?', type=int, help="epochs count")
+    parser.add_argument('epochs20', nargs='?', type=int, help="epochs20")
+    parser.add_argument('epochs200', nargs='?', type=int, help="epochs200")
     parser.add_argument('--testonly', action='store_true', help="test only")
     parser.add_argument('--summaryonly', action='store_true', help="summary only")
     args = parser.parse_args()
@@ -87,12 +88,19 @@ if __name__ == '__main__':
 
         train_img_list, train_label_onehot_list = sample_list_to_data_set(train_sample_list,label_count)
         valid_img_list, valid_label_onehot_list = sample_list_to_data_set(valid_sample_list,label_count)
-        
-        epochs = args.epochs
+
         checkpointer = ModelCheckpoint(filepath='model/classifier_state.hdf5', verbose=1, save_best_only=True)
+        
+        epochs = args.epochs20
         model.fit(train_img_list, train_label_onehot_list,
             validation_data=(valid_img_list, valid_label_onehot_list),
             epochs=epochs, batch_size=20, callbacks=[checkpointer], verbose=1)
+
+        last_epochs = epochs
+        epochs = args.epochs200+last_epochs
+        model.fit(train_img_list, train_label_onehot_list,
+            validation_data=(valid_img_list, valid_label_onehot_list),
+            epochs=epochs, batch_size=200, callbacks=[checkpointer], verbose=1, initial_epoch=last_epochs)
 
     
     model.load_weights('model/classifier_state.hdf5')
