@@ -95,5 +95,6 @@ if __name__ == '__main__':
     model.load_weights(MODEL_FN)
 
     test_img_list,  test_ok_list_list  = sample_list_to_data_set(test_sample_list)
-    test_loss = model.test_on_batch(test_img_list,  test_ok_list_list)
+    test_loss = model.evaluate(test_img_list,  test_ok_list_list)
+    print('')
     print('Test loss: %.4f' % test_loss)
